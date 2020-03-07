@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Application {
@@ -7,33 +8,47 @@ public class Application {
 
         Scanner in = new Scanner(System.in);
 
-        int val = in.nextInt();
 
-        if (app.verificare(val)) {
+        if (app.verifyStrongNumber(getAndValidateUserInput(in))) {
             System.out.println("Strong");
         } else System.out.println("NOT Strong");
     }
 
-    boolean verificare(int x) {
-        int y = x;
-        int i, s = 0, p, c;
-        if (x == 0) {
-            s = 1;
+    static int getAndValidateUserInput(Scanner in) {
+        int value = 0;
+        try {
+             value = in.nextInt();
+        } catch (InputMismatchException e ) {
+            System.out.println("Please insert a number");
         }
-        while (x != 0) {
-            p = 1;
-            c = x % 10;
-            for (i = 1; i <= c; i++) {
-                p *= i;
-            }
-            s += p;
-            x /= 10;
-        }
-        if (s == y) {
-            return true;
-        } else {
+
+        return value;
+    }
+
+    boolean verifyStrongNumber(int number) {
+        int sum = 0;
+        if (number == 0) {
             return false;
         }
+        sum = calculateSumOfFactorials(number, sum);
+
+        return sum == number;
+    }
+
+    private int calculateSumOfFactorials(int number, int sum) {
+        while (number != 0) {
+            sum += computeFactorial(number % 10);
+            number /= 10;
+        }
+        return sum;
+    }
+
+    public int computeFactorial(int number) {
+        int factorialValue = 1;
+        for (int i = 1; i <= number; i++) {
+            factorialValue *= i;
+        }
+        return factorialValue;
     }
 
 }
